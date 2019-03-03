@@ -8,12 +8,12 @@
 Summary:	The Qt5 Charts library
 Summary(pl.UTF-8):	Biblioteka Qt5 Charts
 Name:		qt5-%{orgname}
-Version:	5.11.1
+Version:	5.12.1
 Release:	1
 License:	LGPL v2.1 with Digia Qt LGPL Exception v1.1 or GPL v3.0
 Group:		Libraries
-Source0:	http://download.qt.io/official_releases/qt/5.11/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
-# Source0-md5:	2a305e89f75b423bfe508a74e6105cd1
+Source0:	http://download.qt.io/official_releases/qt/5.12/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
+# Source0-md5:	c441096055972f931d2a51c80ac27a49
 URL:		http://www.qt.io/
 BuildRequires:	Qt5Core-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Gui-devel >= %{qtbase_ver}
