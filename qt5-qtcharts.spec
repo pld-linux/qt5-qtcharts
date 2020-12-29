@@ -3,27 +3,30 @@
 %bcond_without	doc	# Documentation
 
 %define		orgname		qtcharts
-%define		qtbase_ver	%{version}
-%define		qttools_ver	%{version}
+%define		qtbase_ver		%{version}
+%define		qtdeclarative_ver	%{version}
+%define		qttools_ver		%{version}
 Summary:	The Qt5 Charts library
 Summary(pl.UTF-8):	Biblioteka Qt5 Charts
 Name:		qt5-%{orgname}
 Version:	5.15.2
 Release:	2
-License:	LGPL v2.1 with Digia Qt LGPL Exception v1.1 or GPL v3.0
+License:	GPL v3 or commercial
 Group:		Libraries
 Source0:	http://download.qt.io/official_releases/qt/5.15/%{version}/submodules/%{orgname}-everywhere-src-%{version}.tar.xz
 # Source0-md5:	396fe36ef2af15cee94c31e3f8d50975
-URL:		http://www.qt.io/
+URL:		https://www.qt.io/
 BuildRequires:	Qt5Core-devel >= %{qtbase_ver}
 BuildRequires:	Qt5Gui-devel >= %{qtbase_ver}
+BuildRequires:	Qt5Qml-devel >= %{qtdeclarative_ver}
+BuildRequires:	Qt5Quick-devel >= %{qtdeclarative_ver}
 BuildRequires:	Qt5Widgets-devel >= %{qtbase_ver}
 %if %{with doc}
 BuildRequires:	qt5-assistant >= %{qttools_ver}
 %endif
 BuildRequires:	qt5-build >= %{qtbase_ver}
 BuildRequires:	qt5-qmake >= %{qtbase_ver}
-BuildRequires:	rpmbuild(macros) >= 1.654
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -51,6 +54,11 @@ Summary:	The Qt5 Charts library
 Summary(pl.UTF-8):	Biblioteka Qt5 Charts
 Group:		Libraries
 Requires:	Qt5Core >= %{qtbase_ver}
+Requires:	Qt5Gui >= %{qtbase_ver}
+Requires:	Qt5Widgets >= %{qtbase_ver}
+# for qml module
+Requires:	Qt5Qml >= %{qtdeclarative_ver}
+Requires:	Qt5Quick >= %{qtdeclarative_ver}
 
 %description -n Qt5Charts
 Qt Charts module provides a set of easy to use chart components. It
@@ -59,7 +67,9 @@ integrated to modern user interfaces.
 
 %description -n Qt5Charts -l pl.UTF-8
 Biblioteka Qt5 Charts udostępnia łatwe w użyciu komponenty do
-tworzenia wykresów.
+tworzenia wykresów. Wykorzystuje szkielet Qt Graphics View, dzięki
+czemu wykresy mogą być łatwo integrowane z nowoczesnymi interfejsami
+użytkownika.
 
 %package -n Qt5Charts-devel
 Summary:	Qt5 Charts library - development files
@@ -67,6 +77,8 @@ Summary(pl.UTF-8):	Biblioteka Qt5 Charts - pliki programistyczne
 Group:		Development/Libraries
 Requires:	Qt5Charts = %{version}-%{release}
 Requires:	Qt5Core-devel >= %{qtbase_ver}
+Requires:	Qt5Gui-devel >= %{qtbase_ver}
+Requires:	Qt5Widgets-devel >= %{qtbase_ver}
 
 %description -n Qt5Charts-devel
 Qt5 Charts library - development files.
@@ -79,9 +91,7 @@ Summary:	Qt5 Charts documentation in HTML format
 Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Charts w formacie HTML
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc
 Qt5 Charts documentation in HTML format.
@@ -94,9 +104,7 @@ Summary:	Qt5 Charts documentation in QCH format
 Summary(pl.UTF-8):	Dokumentacja do biblioteki Qt5 Charts w formacie QCH
 Group:		Documentation
 Requires:	qt5-doc-common >= %{qtbase_ver}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc-qch
 Qt5 Charts documentation in QCH format.
@@ -108,9 +116,7 @@ Dokumentacja do biblioteki Qt5 Charts w formacie QCH.
 Summary:	Qt5 Charts examples
 Summary(pl.UTF-8):	Przykłady do biblioteki Qt5 Charts
 Group:		Development/Libraries
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description examples
 Qt5 Charts examples.
@@ -128,6 +134,7 @@ qmake-qt5
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
 	INSTALL_ROOT=$RPM_BUILD_ROOT
 
@@ -175,10 +182,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n Qt5Charts
 %defattr(644,root,root,755)
 %doc LICENSE.GPL3 dist/changes-*
+# R: Core Gui Widgets
 %attr(755,root,root) %{_libdir}/libQt5Charts.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libQt5Charts.so.5
 %dir %{qt5dir}/qml/QtCharts
 %{qt5dir}/qml/QtCharts/designer
+# R: Core Gui Qml Quick Widgets
 %attr(755,root,root) %{qt5dir}/qml/QtCharts/libqtchartsqml2.so
 %{qt5dir}/qml/QtCharts/plugins.qmltypes
 %{qt5dir}/qml/QtCharts/qmldir
